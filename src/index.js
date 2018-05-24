@@ -37,20 +37,31 @@ Order.propTypes = {
   })
 }
 
-// make sure that it has at least one scoop
+// make sure that it has at least one scoop & that it is one of the allowed flavors
 function scoopChecker(props, propName, componentName) {
-  if (props[propName].length < 1) {
+  if (props[propName].length < 1 || containsBadFlavor(props[propName])) {
     return new Error(
       'Invalid prop `' + propName + '` supplied to' +
       ' `' + componentName + '`. Validation failed.'
     );
+  }
+
+  function containsBadFlavor(scoops) {
+    const ALLOWED_FLAVORS = ['chocolate', 'vanilla']
+
+    for (let flavor of scoops) {
+      if (!ALLOWED_FLAVORS.includes(flavor)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
 ReactDOM.render(
   (
     <div>
-      <Order />
+      <Order scoops={[]} orderInfo={ {customerName: "Allyson", orderedAt: 3333} }/>
     </div>
   ),
   document.getElementById('global')
